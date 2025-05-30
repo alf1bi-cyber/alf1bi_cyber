@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Demauza Snack - Wirausaha</title>
+<style>
+  /* Reset & base */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    background: #fff8f0;
+    color: #333;
+    line-height: 1.5;
+  }
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  /* Container */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+  /* Header */
+  header {
+    background:#d35400;
+    color: white;
+    text-align: center;
+    padding: 1.5rem 1rem;
+    font-weight: 700;
+    font-size: 2rem;
+    letter-spacing: 2px;
+    user-select: none;
+  }
+  /* Profile Section */
+  .profile {
+    text-align: center;
+    margin: 2rem 0;
+  }
+  .profile img {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid #d35400;
+    box-shadow: 0 0 15px rgba(211, 84, 0, 0.5);
+  }
+  .profile h2 {
+    margin: 0.75rem 0 0.25rem;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #d35400;
+    user-select: text;
+  }
+  /* Contact Links */
+  .contact {
+    margin-top: 0.5rem;
+    font-size: 1.1rem;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+  .contact a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #2d3436;
+    font-weight: 600;
+    background: #f1c40f;
+    padding: 6px 14px;
+    border-radius: 30px;
+    transition: background-color 0.25s ease, color 0.25s ease;
+    user-select: text;
+  }
+  .contact a:hover {
+    background-color: #f39c12;
+    color: white;
+  }
+  .contact .instagram-icon {
+    width: 18px;
+    height: 18px;
+    fill: #833ab4;
+  }
+
+  /* Products Section */
+  .products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(350px,1fr));
+    gap: 2rem;
+    padding: 2rem 0;
+  }
+  .product-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 6px 16px rgb(0 0 0 / 0.1);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    user-select: none;
+  }
+  .product-card h3 {
+    color: #d35400;
+    font-size: 1.4rem;
+    margin: 0.3rem 0 0.5rem 0;
+    font-weight: 700;
+  }
+
+  /* Image slider container */
+  .slider {
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+    height: 200px;
+    margin: 0 auto 1rem auto;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgb(211 84 0 / 0.3);
+  }
+  .slides {
+    display: flex;
+    transition: transform 0.4s ease-in-out;
+    height: 200px;
+  }
+  .slides img {
+    width: 320px;
+    height: 200px;
+    object-fit: cover;
+    user-select: none;
+    pointer-events: none;
+  }
+  .slider-buttons {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+  .prev,
+  .next {
+    background: rgba(211,84,0,0.75);
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    font-size: 1.3rem;
+    border-radius: 50%;
+    pointer-events: all;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  .prev:hover,
+  .next:hover {
+    background: #a84300;
+  }
+
+  /* Product Variants and Prices */
+  .variants {
+    font-size: 0.95rem;
+    color: #444;
+    margin-bottom: 0.9rem;
+    flex-grow: 1;
+    user-select: text;
+    line-height: 1.3;
+  }
+  /* Button */
+  .btn-order {
+    background: #d35400;
+    color: white;
+    border: none;
+    padding: 10px 14px;
+    font-weight: 700;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    align-self: center;
+    width: 100%;
+  }
+  .btn-order:hover {
+    background: #a84300;
+    box-shadow: 0 4px 15px rgba(168,67,0,0.6);
+  }
+  /* Order Section */
+  .order-section {
+    background: #fff3e0;
+    border-radius: 15px;
+    box-shadow: 0 6px 20px rgb(211 84 0 / 0.2);
+    padding: 1rem 2rem 2rem;
+    max-width: 800px;
+    margin: 2rem auto 3rem;
+    display: none;
+  }
+  .order-section.active {
+    display: block;
+  }
+  .order-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #d35400;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  /* Selected products list */
+  .selected-products {
+    margin-bottom: 1rem;
+  }
+  .selected-product-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: white;
+    border-radius: 12px;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  }
+  .selected-product-item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #d35400;
+  }
+  .selected-product-name {
+    font-weight: 600;
+    color: #d35400;
+    flex-grow: 1;
+  }
+  .remove-btn {
+    background: #e74c3c;
+    border: none;
+    color: white;
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-weight: 700;
+    cursor: pointer;
+    user-select: none;
+  }
+  .remove-btn:hover {
+    background: #c0392b;
+  }
+  /* Form for order details */
+  label {
+    font-weight: 600;
+    display: block;
+    margin: 0.8rem 0 0.3rem 0;
+  }
+  input[type="text"], textarea {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-size: 1rem;
+    resize: vertical;
+  }
+  textarea {
+    min-height: 70px;
+  }
+  /* Submit Button */
+  .btn-submit-order {
+    background: #27ae60;
+    color: white;
+    padding: 12px 0;
+    font-weight: 700;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    border: none;
+    margin-top: 1.2rem;
+    cursor: pointer;
+    width: 100%;
+  }
+  .btn-submit-order:hover {
+    background: #1e8449;
+    box-shadow: 0 6px 15px rgba(30, 132, 73, 0.8);
+  }
+  /* Responsive */
+  @media (max-width: 480px) {
+    .contact {
+      flex-direction: column;
+      gap: 0.6rem;
+      align-items: center;
+    }
+    .slider {
+      max-width: 100%;
+      height: 160px;
+    }
+    .slides img {
+      width: 100%;
+      height: 160px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  Demauza Snack
+</header>
+
+<div class="container">
+
+  <section class="profile" aria-label="Profil Demauza Snack">
+    <img src="https://i.ibb.co/vxQkJQ4/profile.jpg" alt="Foto Profil Demauza Snack" />
+    <h2>Demauza Snack</h2>
+    <div class="contact" role="contentinfo">
+      <a href="https://instagram.com/Demauza.Snack" target="_blank" rel="noopener" aria-label="Instagram Demauza Snack">
+        <svg class="instagram-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+          aria-hidden="true" focusable="false"><path
+            d="M7.75 2c-3.728 0-5 1.272-5 5v8c0 3.728 1.272 5 5 5h8c3.728 0 5-1.272 5-5v-8c0-3.728-1.272-5-5-5h-8zm8
+            1.5c2.473 0 3.5 1.027 3.5 3.5v8c0 2.473-1.027 3.5-3.5
+            3.5h-8c-2.473 0-3.5-1.027-3.5-3.5v-8c0-2.473
+            1.027-3.5 3.5-3.5h8zM12 7a5 5 0 1 0 0 10a5 5 0 0 0 0-10zm0
+            1.5a3.5 3.5 0 1 1 0 7a3.5 3.5 0 0 1 0-7zm4.75-.875a1.125
+            1.125 0 1 0 0 2.25a1.125 1.125 0 0 0 0-2.25z" fill="currentColor" /></svg>
+        Instagram
+      </a>
+      <a href="https://wa.me/62895331125104" target="_blank" rel="noopener" aria-label="Nomor WhatsApp +62895331125104">+62895331125104</a>
+    </div>
+  </section>
+
+  <section class="products" aria-label="Daftar Produk Demauza Snack">
+
+    <!-- Product 1 -->
+    <article class="product-card" tabindex="0" data-name="Corndog Asin" data-images='[
+      "https://i.ibb.co/m09M0Wz/corndog-asin1.jpg",
+      "https://i.ibb.co/vvmZsPl/corndog-asin2.jpg",
+      "https://i.ibb.co/8d5rr3z/corndog-asin3.jpg",
+      "https://i.ibb.co/HPFsN6z/corndog-asin4.jpg",
+      "https://i.ibb.co/vBP2CnX/corndog-asin5.jpg"
+    ]'>
+      <div class="slider">
+        <div class="slides">
+          <img src="https://i.ibb.co/m09M0Wz/corndog-asin1.jpg" alt="Corndog Asin Foto 1" />
+          <img src="https://i.ibb.co/vvmZsPl/corndog-asin2.jpg" alt="Corndog Asin Foto 2" />
+          <img src="https://i.ibb.co/8d5rr3z/corndog-asin3.jpg" alt="Corndog Asin Foto 3" />
+          <img src="https://i.ibb.co/HPFsN6z/corndog-asin4.jpg" alt="Corndog Asin Foto 4" />
+          <img src="https://i.ibb.co/vBP2CnX/corndog-asin5.jpg" alt="Corndog Asin Foto 5" />
+        </div>
+        <div class="slider-buttons">
+          <button class="prev" aria-label="Gambar sebelumnya">&#10094;</button>
+          <button class="next" aria-label="Gambar berikutnya">&#10095;</button>
+        </div>
+      </div>
+      <h3>Corndog Asin</h3>
+      <div class="variants" aria-label="Varian dan harga Corndog Asin">
+        <strong>Variasi Ori</strong>: Sosis Small (7k), Sosis Medium (10k), Sosis Large (15k), Sosis + Mozza (10k), Sosis + Mozza + Sosis (15k), Full Mozzarella Small (7k), Full Mozzarella Medium (10k), Full Mozzarella Large (15k) <br />
+        <strong>Variasi Mie</strong>: Sosis Small (8k), Sosis Medium (12k), Sosis Large (18k), Sosis + Mozza (12k), Sosis + Mozza + Sosis (18k), Full Mozzarella Small (8k), Full Mozzarella Medium (12k), Full Mozzarella Large (18k) <br />
+        <strong>Variasi Kentang</strong>: Sosis Small (10k), Sosis Medium (15k), Sosis Large (20k), Sosis + Mozza (15k), Sosis + Mozza + Sosis (20k), Full Mozzarella Small (10k), Full Mozzarella Medium (15k), Full Mozzarella Large (20k)
+      </div>
+      <button class="btn-order" type="button">Pesan Sekarang</button>
+    </article>
+
+    <!-- Product 2 -->
+    <article class="product-card" tabindex="0" data-name="Corndog Manis" data-images='[
+      "https://i.ibb.co/nR4zTcF/corndog-manis1.jpg",
+      "https://i.ibb.co/dfVY9rH/corndog-manis2.jpg",
+      "https://i.ibb.co/hDtby9G/corndog-manis3.jpg",
+      "https://i.ibb.co/Jjz2kfL/corndog-manis4.jpg",
+      "https://i.ibb.co/8NPnxZ0/corndog-manis5.jpg"
+    ]'>
+      <div class="slider">
+        <div class="slides">
+          <img src="https://i.ibb.co/nR4zTcF/corndog-manis1.jpg" alt="Corndog Manis Foto 1" />
+          <img src="https://i.ibb.co/dfVY9rH/corndog-manis2.jpg" alt="Corndog Manis Foto 2" />
+          <img src="https://i.ibb.co/hDtby9G/corndog-manis3.jpg" alt="Corndog Manis Foto 3" />
+          <img src="https://i.ibb.co/Jjz2kfL/corndog-manis4.jpg" alt="Corndog Manis Foto 4" />
+          <img src="https://i.ibb.co/8NPnxZ0/corndog-manis5.jpg" alt="Corndog Manis Foto 5" />
+        </div>
+        <div class="slider-buttons">
+          <button class="prev" aria-label="Gambar sebelumnya">&#10094;</button>
+          <button class="next" aria-label="Gambar berikutnya">&#10095;</button>
+        </div>
+      </div>
+      <h3>Corndog Manis</h3>
+      <div class="variants" aria-label="Varian dan harga Corndog Manis">
+        <strong>Varian</strong>: Pisang (7k), Pisang + Mozza (10k), Full Mozzarella Small (7k), Full Mozzarella Medium (10k), Full Mozzarella Large (15k) <br />
+        <strong>Toping Manis</strong>: Keju Cheddar (2k), Oreo Crumb (2k), Chococips (2k), Mesis (2k)
+      </div>
+      <button class="btn-order" type="button">Pesan Sekarang</button>
+    </article>
+
+    <!-- Product 3 -->
+    <article class="product-card" tabindex="0" data-name="Dimsum" data-images='[
+      "https://i.ibb.co/jzkg2mJ/dimsum1.jpg",
+      "https://i.ibb.co/QCc65vg/dimsum2.jpg",
+      "https://i.ibb.co/VNm8F84/dimsum3.jpg",
+      "https://i.ibb.co/N2KzPPd/dimsum4.jpg",
+      "https://i.ibb.co/0Kc3YkL/dimsum5.jpg"
+    ]'>
+      <div class="slider">
+        <div class="slides">
+          <img src="https://i.ibb.co/jzkg2mJ/dimsum1.jpg" alt="Dimsum 1" />
+          <img src="https://i.ibb.co/QCc65vg/dimsum2.jpg" alt="Dimsum 2" />
+          <img src="https://i.ibb.co/VNm8F84/dimsum3.jpg" alt="Dimsum 3" />
+          <img src="https://i.ibb.co/N2KzPPd/dimsum4.jpg" alt="Dimsum 4" />
+          <img src="https://i.ibb.co/0Kc3YkL/dimsum5.jpg" alt="Dimsum 5" />
+        </div>
+        <div class="slider-buttons">
+          <button class="prev" aria-label="Gambar sebelumnya">&#10094;</button>
+          <button class="next" aria-label="Gambar berikutnya">&#10095;</button>
+        </div>
+      </div>
+      <h3>Dimsum</h3>
+      <div class="variants" aria-label="Varian dan harga Dimsum">
+        <strong>Varian</strong>: Original (10k), Bakar (12k)
+      </div>
+      <button class="btn-order" type="button">Pesan Sekarang</button>
+    </article>
+
+    <!-- Product 4 -->
+    <article class="product-card" tabindex="0" data-name="Nasi Daun Jeruk" data-images='[
+      "https://i.ibb.co/HxhxqGv/nasi-daun-jeruk1.jpg",
+      "https://i.ibb.co/pdZrQDg/nasi-daun-jeruk2.jpg",
+      "https://i.ibb.co/vmYs7sh/nasi-daun-jeruk3.jpg",
+      "https://i.ibb.co/g7rj216/nasi-daun-jeruk4.jpg",
+      "https://i.ibb.co/fG0SJMd/nasi-daun-jeruk5.jpg"
+    ]'>
+      <div class="slider">
+        <div class="slides">
+          <img src="https://i.ibb.co/HxhxqGv/nasi-daun-jeruk1.jpg" alt="Nasi Daun Jeruk 1" />
+          <img src="https://i.ibb.co/pdZrQDg/nasi-daun-jeruk2.jpg" alt="Nasi Daun Jeruk 2" />
+          <img src="https://i.ibb.co/vmYs7sh/nasi-daun-jeruk3.jpg" alt="Nasi Daun Jeruk 3" />
+          <img src="https://i.ibb.co/g7rj216/nasi-daun-jeruk4.jpg" alt="Nasi Daun Jeruk 4" />
+          <img src="https://i.ibb.co/fG0SJMd/nasi-daun-jeruk5.jpg" alt="Nasi Daun Jeruk 5" />
+        </div>
+        <div class="slider-buttons">
+          <button class="prev" aria-label="Gambar sebelumnya">&#10094;</button>
+          <button class="next" aria-label="Gambar berikutnya">&#10095;</button>
+        </div>
+      </div>
+      <h3>Nasi Daun Jeruk</h3>
+      <div class="variants" aria-label="Varian dan harga Nasi Daun Jeruk">
+        <strong>Varian</strong>: Original (10k)
+      </div>
+      <button class="btn-order" type="button">Pesan Sekarang</button>
+    </article>
+
+    <!-- Product 5 -->
+    <article class="product-card" tabindex="0" data-name="Goreng Spicy" data-images='[
+      "https://i.ibb.co/j7GxLnY/goreng-spicy1.jpg",
+      "https://i.ibb.co/jfMxr1F/goreng-spicy2.jpg",
+      "https://i.ibb.co/BV1JzFg/goreng-spicy3.jpg",
+      "https://i.ibb.co/3d794vG/goreng-spicy4.jpg",
+      "https://i.ibb.co/7XN5nDV/goreng-spicy5.jpg"
+    ]'>
+      <div class="slider">
+        <div class="slides">
+          <img src="https://i.ibb.co/j7GxLnY/goreng-spicy1.jpg" alt="Goreng Spicy 1" />
+          <img src="https://i.ibb.co/jfMxr1F/goreng-spicy2.jpg" alt="Goreng Spicy 2" />
+          <img src="https://i.ibb.co/BV1JzFg/goreng-spicy3.jpg" alt="Goreng Spicy 3" />
+          <img src="https://i.ibb.co/3d794vG/goreng-spicy4.jpg" alt="Goreng Spicy 4" />
+          <img src="https://i.ibb.co/7XN5nDV/goreng-spicy5.jpg" alt="Goreng Spicy 5" />
+        </div>
+        <div class="slider-buttons">
+          <button class="prev" aria-label="Gambar sebelumnya">&#10094;</button>
+          <button class="next" aria-label="Gambar berikutnya">&#10095;</button>
+        </div>
+      </div>
+      <h3>Goreng Spicy</h3>
+      <div class="variants" aria-label="Varian dan harga Goreng Spicy">
+        <strong>Varian</strong>: Original (10k)
+      </div>
+      <button class="btn-order" type="button">Pesan Sekarang</button>
+    </article>
+
+    <!-- Product 6 -->
+    <article class="product-card" tabindex="0" data-name="Cireng Ayam" data-images='[
+      "https://i.ibb.co/k0WK7RQ/cireng-ayam1.jpg",
+      "https://i.ibb.co/V39KbYh/cireng-ayam2.jpg",
+      "https://i.ibb.co/gw3Gy71/cireng-ayam3.jpg",
+      "https://i.ibb.co/hfPrFLD/cireng-ayam4.jpg",
+      "https://i.ibb.co/Tq6Qhhd/cireng-ayam5.jpg"
+    ]'>
+      <div class="slider">
+        <div class="slides">
+          <img src="https://i.ibb.co/k0WK7RQ/cireng-ayam1.jpg" alt="Cireng Ayam 1" />
+          <img src="https://i.ibb.co/V39KbYh/cireng-ayam2.jpg" alt="Cireng Ayam 2" />
+          <img src="https://i.ibb.co/gw3Gy71/cireng-ayam3.jpg" alt="Cireng Ayam 3" />
+          <img src="https://i.ibb.co/hfPrFLD/cireng-ayam4.jpg" alt="Cireng Ayam 4" />
+          <img src="https://i.ibb.co/Tq6Qhhd/cireng-ayam5.jpg" alt="Cireng Ayam 5" />
+        </div>
+        <div class="slider-buttons">
+          <button class="prev" aria-label="Gambar sebelumnya">&#10094;</button>
+          <button class="next" aria-label="Gambar berikutnya">&#10095;</button>
+        </div>
+      </div>
+      <h3>Cireng Ayam</h3>
+      <div class="variants" aria-label="Varian dan harga Cireng Ayam">
+        <strong>Varian</strong>: Original (10k)
+      </div>
+      <button class="btn-order" type="button">Pesan Sekarang</button>
+    </article>
+
+    <!-- Product 7 -->
+    <article class="product-card" tabindex="0" data-name="Bakso Goreng" data-images='[
+      "https://i.ibb.co/NpyW9zw/bakso-goreng1.jpg",
+      "https://i.ibb.co/5cCxrG3/bakso-goreng2.jpg",
+      "https://i.ibb.co/dD1jBrd/bakso-goreng3.jpg",
+      "https://i.ibb.co/mTBT4yM/bakso-goreng4.jpg",
+      "https://i.ibb.co/gzHtDJY/bakso-goreng5.jpg"
+    ]'>
+      <div class="slider">
+        <div class="slides">
+          <img src="https://i.ibb.co/NpyW9zw/bakso-goreng1.jpg" alt="Bakso Goreng 1" />
+          <img src="https://i.ibb.co/5cCxrG3/bakso-goreng2.jpg" alt="Bakso Goreng 2" />
+          <img src="https://i.ibb.co/dD1jBrd/bakso-goreng3.jpg" alt="Bakso Goreng 3" />
+          <img src="https://i.ibb.co/mTBT4yM/bakso-goreng4.jpg" alt="Bakso Goreng 4" />
+          <img src="https://i.ibb.co/gzHtDJY/bakso-goreng5.jpg" alt="Bakso Goreng 5" />
+        </div>
+        <div class="slider-buttons">
+          <button class="prev" aria-label="Gambar sebelumnya">&#10094;</button>
+          <button class="next" aria-label="Gambar berikutnya">&#10095;</button>
+        </div>
+      </div>
+      <h3>Bakso Goreng</h3>
+      <div class="variants" aria-label="Varian dan harga Bakso Goreng">
+        <strong>Varian</strong>: Original (10k)
+      </div>
+      <button class="btn-order" type="button">Pesan Sekarang</button>
+    </article>
+
+    <!-- Product 8 -->
+    <article class="product-card" tabindex="0" data-name="Sayap Spicy" data-images='[
+      "https://i.ibb.co/g6dCJFC/sayap-spicy1.jpg",
+      "https://i.ibb.co/jfSLg91/sayap-spicy2.jpg",
+      "https://i.ibb.co/C70WR6n/sayap-spicy3.jpg",
+      "https://i.ibb.co/kyjYWsF/sayap-spicy4.jpg",
+      "https://i.ibb.co/gF3Q6cT/sayap-spicy5.jpg"
+    ]'>
+      <div class="slider">
+        <div class="slides">
+          <img src="https://i.ibb.co/g6dCJFC/sayap-spicy1.jpg" alt="Sayap Spicy 1" />
+          <img src="https://i.ibb.co/jfSLg91/sayap-spicy2.jpg" alt="Sayap Spicy 2" />
+          <img src="https://i.ibb.co/C70WR6n/sayap-spicy3.jpg" alt="Sayap Spicy 3" />
+          <img src="https://i.ibb.co/kyjYWsF/sayap-spicy4.jpg" alt="Sayap Spicy 4" />
+          <img src="https://i.ibb.co/gF3Q6cT/sayap-spicy5.jpg" alt="Sayap Spicy 5" />
+        </div>
+        <div class="slider-buttons">
+          <button class="prev" aria-label="Gambar sebelumnya">&#10094;</button>
+          <button class="next" aria-label="Gambar berikutnya">&#10095;</button>
+        </div>
+      </div>
+      <h3>Sayap Spicy</h3>
+      <div class="variants" aria-label="Varian dan harga Sayap Spicy">
+        <strong>Varian</strong>: Original (10k)
+      </div>
+      <button class="btn-order" type="button">Pesan Sekarang</button>
+    </article>
+
+    <!-- Product 9 -->
+    <article class="product-card" tabindex="0" data-name="Ceker Spicy" data-images='[
+      "https://i.ibb.co/Fgh4sVK/ceker-spicy1.jpg",
+      "https://i.ibb.co/JFV7k0j/ceker-spicy2.jpg",
+      "https://i.ibb.co/Lpw5RJ1/ceker-spicy3.jpg",
+      "https://i.ibb.co/9WKfD2T/ceker-spicy4.jpg",
+      "https://i.ibb.co/2kRsZxL/ceker-spicy5.jpg"
+    ]'>
+      <div class="slider">
+        <div class="slides">
+          <img src="https://i.ibb.co/Fgh4sVK/ceker-spicy1.jpg" alt="Ceker Spicy 1" />
+          <img src="https://i.ibb.co/JFV7k0j/ceker-spicy2.jpg" alt="Ceker Spicy 2" />
+          <img src="https://i.ibb.co/Lpw5RJ1/ceker-spicy3.jpg" alt="Ceker Spicy 3" />
+          <img src="https://i.ibb.co/9WKfD2T/ceker-spicy4.jpg" alt="Ceker Spicy 4" />
+          <img src="https://i.ibb.co/2kRsZxL/ceker-spicy5.jpg" alt="Ceker Spicy 5" />
+        </div>
+        <div class="slider-buttons">
+          <button class="prev" aria-label="Gambar sebelumnya">&#10094;</button>
+          <button class="next" aria-label="Gambar berikutnya">&#10095;</button>
+        </div>
+      </div>
+      <h3>Ceker Spicy</h3>
+      <div class="variants" aria-label="Varian dan harga Ceker Spicy">
+        <strong>Varian</strong>: Original (10k)
+      </div>
+      <button class="btn-order" type="button">Pesan Sekarang</button>
+    </article>
+
+  </section>
+
+  <!-- Order section -->
+  <section id="orderSection" class="order-section" aria-live="polite" aria-label="Form Pemesanan Demauza Snack">
+    <h2 class="order-title">Form Pemesanan</h2>
+    <div>
+      <h3>Produk Terpilih:</h3>
+      <div id="selectedProducts" class="selected-products" aria-label="Daftar produk yang dipilih">Belum ada produk yang dipilih.</div>
+    </div>
+
+    <label for="customerName">Nama Lengkap</label>
+    <input type="text" id="customerName" name="customerName" placeholder="Masukkan nama lengkap Anda" required />
+
+    <label for="customerAddress">Alamat Pengiriman</label>
+    <textarea id="customerAddress" name="customerAddress" placeholder="Masukkan alamat lengkap Anda (Misal: Jalan, RT/RW, Kelurahan, Kota)" required></textarea>
+
+    <button id="submitOrderBtn" class="btn-submit-order" type="button">Kirim Pesanan</button>
+    <button id="closeOrderBtn" class="btn-submit-order" type="button" style="margin-top:0.5rem; background:#e74c3c;">Batal</button>
+  </section>
+
+</div>
+
+<script>
+  (() => {
+    const products = document.querySelectorAll('.product-card');
+    const orderSection = document.getElementById('orderSection');
+    const selectedProductsContainer = document.getElementById('selectedProducts');
+    const customerNameInput = document.getElementById('customerName');
+    const customerAddressInput = document.getElementById('customerAddress');
+    const submitOrderBtn = document.getElementById('submitOrderBtn');
+    const closeOrderBtn = document.getElementById('closeOrderBtn');
+
+    let selectedProducts = [];
+
+    function renderSelectedProducts() {
+      selectedProductsContainer.innerHTML = '';
+      if (selectedProducts.length === 0) {
+        selectedProductsContainer.textContent = "Belum ada produk yang dipilih.";
+        return;
+      }
+      selectedProducts.forEach(({name, img}) => {
+        const div = document.createElement('div');
+        div.className = 'selected-product-item';
+        div.innerHTML = `
+          <img src="${img}" alt="Foto ${name}">
+          <div class="selected-product-name">${name}</div>
+          <button class="remove-btn" aria-label="Hapus ${name} dari pesanan">x</button>
+        `;
+        div.querySelector('.remove-btn').addEventListener('click', () => {
+          selectedProducts = selectedProducts.filter(p => p.name !== name);
+          renderSelectedProducts();
+        });
+        selectedProductsContainer.appendChild(div);
+      });
+    }
+
+    function openOrder() {
+      if (!orderSection.classList.contains('active')) {
+        orderSection.classList.add('active');
+      }
+      orderSection.scrollIntoView({behavior: 'smooth'});
+      customerNameInput.focus();
+    }
+
+    function closeOrder() {
+      orderSection.classList.remove('active');
+    }
+
+    products.forEach(prod => {
+      prod.querySelector('.btn-order').addEventListener('click', () => {
+        const name = prod.dataset.name;
+        const imgs = JSON.parse(prod.dataset.images);
+        if (selectedProducts.find(p => p.name === name)) {
+          alert('Produk sudah ada di daftar pesanan. Anda dapat menambahkan produk lain atau menghapus produk ini jika ingin.');
+          openOrder();
+          return;
+        }
+        selectedProducts.push({name: name, img: imgs[0]});
+        renderSelectedProducts();
+        openOrder();
+      });
+
+      // Setup slider for this product
+      const slider = prod.querySelector('.slider');
+      if (!slider) return;
+      const slides = slider.querySelector('.slides');
+      const slideImages = slides.querySelectorAll('img');
+      const prevBtn = slider.querySelector('.prev');
+      const nextBtn = slider.querySelector('.next');
+      let currentIndex = 0;
+
+      function updateSlider() {
+        const width = slideImages[0].clientWidth;
+        slides.style.transform = `translateX(${-width * currentIndex}px)`;
+      }
+
+      prevBtn.addEventListener('click', () => {
+        currentIndex = (currentIndex === 0) ? slideImages.length - 1 : currentIndex - 1;
+        updateSlider();
+      });
+
+      nextBtn.addEventListener('click', () => {
+        currentIndex = (currentIndex + 1) % slideImages.length;
+        updateSlider();
+      });
+
+      // On window resize update slide position
+      window.addEventListener('resize', updateSlider);
+
+      // Initial update
+      updateSlider();
+    });
+
+    submitOrderBtn.addEventListener('click', () => {
+      if (selectedProducts.length === 0) {
+        alert('Pilih setidaknya satu produk terlebih dahulu.');
+        return;
+      }
+      const name = customerNameInput.value.trim();
+      const address = customerAddressInput.value.trim();
+      if (!name) {
+        alert('Mohon isi nama lengkap Anda.');
+        customerNameInput.focus();
+        return;
+      }
+      if (!address) {
+        alert('Mohon isi alamat lengkap pengiriman Anda.');
+        customerAddressInput.focus();
+        return;
+      }
+      let productList = selectedProducts.map(p => p.name).join(', ');
+      alert(`Terima kasih, ${name}! Pesanan Anda untuk produk: ${productList} akan segera kami proses dan kirim ke alamat:
+${address}`);
+      selectedProducts = [];
+      renderSelectedProducts();
+      customerNameInput.value = '';
+      customerAddressInput.value = '';
+      closeOrder();
+    });
+
+    closeOrderBtn.addEventListener('click', () => {
+      closeOrder();
+    });
+
+    renderSelectedProducts();
+
+  })();
+</script>
+
+</body>
+</html>
+
